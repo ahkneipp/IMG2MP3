@@ -19,8 +19,7 @@ def get_saturation(img, mask):
 
 
 def get_size(img, mask):
-    pass
-
+    return np.sum(mask) 
 
 def get_noisiness(img, mask):
     pass
