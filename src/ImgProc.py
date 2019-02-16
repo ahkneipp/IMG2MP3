@@ -2,24 +2,27 @@ import cv2
 import numpy as np
 
 
-def get_colors(img, blob_pts):
-    
+def get_colors(img, mask):
+    hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # hsv_img = np.multiply(hsv_img, np.expand_dims(masks[::, ::, i], axis=2))
+    hist = cv2.calcHist([hsv_img], channels=[0], mask=mask, histSize=[12], ranges=[0,180])
+    return hist
     pass
 
 
-def get_intensity(img, blob_pts):
+def get_intensity(img, mask):
     pass
 
 
-def get_saturation(img, blob_pts):
+def get_saturation(img, mask):
     pass
 
 
-def get_size(img, blob_pts):
+def get_size(img, mask):
     pass
 
 
-def get_noisiness(img, blob_pts):
+def get_noisiness(img, mask):
     pass
 
 
@@ -48,7 +51,9 @@ masks = get_img_maps(img, 16)
 x, y, z = np.shape(masks)
 for i in range(z):
     cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
+    tmp_hist = get_colors(img, masks[::,::,i])
     print (i)
-    cv2.waitKey(0)
+    cv2.waitKey(100)
+
 
 
