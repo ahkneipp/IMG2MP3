@@ -102,3 +102,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#Pycharm
+.idea/
+
+#Vim
+*.swo
+*.swp
+
+*.pyc
