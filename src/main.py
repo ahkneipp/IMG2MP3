@@ -1,23 +1,22 @@
 import ImgProc
 import synthFuncs
 import cv2
+import time
 import numpy as np
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
-cameraCapture = cv2.VideoCapture(0)
-while cameraCapture.isOpened():
-    success, img = cameraCapture.read()
+camera = PiCamera()
+rawCapture = PiRGBArray(camera)
+time.sleep(0.1)
+
+while True:
+    camera.capture(rawCapture, format="bgr")
+    img=rawCapture.array
     cv2.imshow("Test", img)
-    keyPress = cv2.waitKey(0)
-    success = False
-    start = True
+    keyPress = cv2.waitKey(1)
+    rawCapture.truncate(0)
     if keyPress == 27:
         break
 
-    if success:
-        cv2.imshow("Test", img)
-        start = False
-    elif not start:
-        break
-
 cv2.destroyAllWindows()
-cameraCapture.release()
