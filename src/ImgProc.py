@@ -77,7 +77,7 @@ def get_masks(img):
     im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(im, 100, 200)
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    masks = np.zeros(im.shape + (len(contours),))
+    masks = np.zeros(im.shape + (len(contours),), dtype="uint8")
 
     # Generates rectanglular 
     for i in range(len(contours)):
@@ -86,10 +86,12 @@ def get_masks(img):
         x, y, w, h = cv2.boundingRect(contours[i])
 
         # Draws the rectangle on the mask
-        cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
+        tmp = np.zeros(im.shape, dtype='uint8')
+        cv2.rectangle(tmp, (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
+        masks[:,:,i] = tmp
     return masks
 
-img = cv2.imread("../index.jpeg")
+img = cv2.imread("../test1.jpg")
 #img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
 #img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
 masks = get_masks(img)
@@ -101,11 +103,11 @@ for i in range(z):
     print("Image %d" % (i + 1))
     tmp_hist = get_colors(img, masks[::, ::, i])
     print("\tColor Range: %d" % tmp_hist)
-    tmp_intensity = get_intensity(img, masks[::,::,1])
+    tmp_intensity = get_intensity(img, masks[::,::,i])
     print("\tIntensity: %d" % tmp_intensity)
-    tmp_saturation = get_saturation(img, masks[::,::,1])
+    tmp_saturation = get_saturation(img, masks[::,::,i])
     print("\tSaturation: %d" % tmp_saturation)
-    tmp_size = get_size(masks[::,::,1])
+    tmp_size = get_size(masks[::,::,i])
     print("\tSize: %d" % tmp_size)
     print("\tNoisiness: %d" % (get_noisiness(img, masks[::, ::, i])))
     if cv2.waitKey(1) == 27:
