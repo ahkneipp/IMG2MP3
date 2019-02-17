@@ -70,20 +70,36 @@ def get_img_maps(img, num_blocks):
     return retval
 
 
-def get_masks(img):
+def get_masks(img, target_depth):
     """Finds all contours in an image and returns a list of masks, all of which are filled in rectangular
     bounding boxes of each contour.
+
+    target_depth is the lowest depth of the contour to evaluate
     """
     im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(im, 100, 200)
-    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    masks = np.zeros(im.shape + (len(contours),), dtype="uint8")
+    contours, hiearchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+    print(hiearchy)
+
+    # Filter out all contours that are too deep in the hiearchy
+    valid_contours = []
+    for i in range(len(contours)):
+        depth = 0
+        parent = hiearchy[0][i][3]
+        while parent != -1:
+            depth += 1
+            parent = hiearchy[0][parent][3]
+        if depth <= target_depth:
+            valid_contours.append(contours[i])
+
+    masks = np.zeros(im.shape + (len(valid_contours),), dtype="uint8")
 
     # Generates rectanglular 
-    for i in range(len(contours)):
+    for i in range(len(valid_contours)):
 
         # Finds the dims of the bounding rect
-        x, y, w, h = cv2.boundingRect(contours[i])
+        x, y, w, h = cv2.boundingRect(valid_contours[i])
 
         # Draws the rectangle on the mask
         tmp = np.zeros(im.shape, dtype='uint8')
@@ -91,10 +107,10 @@ def get_masks(img):
         masks[:,:,i] = tmp
     return masks
 
-img = cv2.imread("../test1.jpg")
+img = cv2.imread("Boshi!.jpg")
 #img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
 #img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
-masks = get_masks(img)
+masks = get_masks(img, target_depth = 2)
 x, y, z = np.shape(masks)
 # print (get_noisiness(np.random.randint(255, size=(1000, 1000, 3), dtype="uint8"), None))
 # print (get_noisiness(np.ones((1000, 1000, 3), dtype="uint8"), None))
