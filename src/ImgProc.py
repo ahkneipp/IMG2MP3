@@ -77,7 +77,7 @@ def get_masks(img, target_depth):
     """
     im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(im, 100, 200)
-    contours, hiearchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    throwaway, contours, hiearchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
 
     print(hiearchy)
 
