@@ -5,6 +5,7 @@ import time
 import numpy as np
 from picamera import PiCamera
 import wiringpi
+import gc
 
 camera = PiCamera()
 camera.resolution=(320,240)
@@ -42,6 +43,7 @@ while True:
             synthFuncs.play_progression(synthFuncs.get_progression(d[1],
                 d[3], d[2], d[4]))
             # time.sleep(.08)
+        gc.collect()
     if keyPress == 27:
         break
 
