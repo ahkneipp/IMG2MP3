@@ -77,20 +77,17 @@ def get_masks(img):
     im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(im, 100, 200)
     contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    masks = []
+    masks = np.zeros(im.shape + (len(contours),))
 
     # Generates rectanglular 
     for i in range(len(contours)):
-
-        # Makes a blank mask
-        masks.append(np.zeros(im.shape, dtype='uint8'))
 
         # Finds the dims of the bounding rect
         x, y, w, h = cv2.boundingRect(contours[i])
 
         # Draws the rectangle on the mask
         cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
-    return np.asarray(masks)
+    return masks
 
 img = cv2.imread("../index.jpeg")
 #img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
