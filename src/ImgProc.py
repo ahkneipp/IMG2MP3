@@ -63,14 +63,10 @@ def get_img_maps(img, num_blocks):
             np.ones((height_step, width_step), dtype="uint8")
     return retval
 
-
-
-    return retval
-
-img = cv2.imread("../index.jpeg")
-masks = get_img_maps(img, 16)
-x, y, z = np.shape(masks)
-print (get_noisiness(np.random.rand(20,20), None))
+#img = cv2.imread("../index.jpeg")
+#masks = get_img_maps(img, 16)
+#x, y, z = np.shape(masks)
+#print (get_noisiness(np.random.rand(20,20), None))
 # for i in range(z):
 #     cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
 #     tmp_hist = get_colors(img, masks[::,::,i])
@@ -78,4 +74,25 @@ print (get_noisiness(np.random.rand(20,20), None))
 #     cv2.waitKey(100)
 
 
+def get_masks(img):
+    """Finds all contours in an image and returns a list of masks, all of which are filled in rectangular
+    bounding boxes of each contour.
+    """
+    im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(im, 100, 200)
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    masks = []
 
+    # Generates rectanglular 
+    for i in range(len(contours)):
+
+        # Makes a blank mask
+        masks.append(np.zeros(im.shape, dtype='uint8'))
+
+        # Finds the dims of the bounding rect
+        x, y, w, h = cv2.boundingRect(contours[i])
+
+        # Draws the rectangle on the mask
+        cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
+
+get_masks(cv2.imread('Boshi!.jpg'))
