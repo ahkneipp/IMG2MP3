@@ -85,4 +85,25 @@ for i in range(z):
         break
 
 
+def get_masks(img):
+    """Finds all contours in an image and returns a list of masks, all of which are filled in rectangular
+    bounding boxes of each contour.
+    """
+    im = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(im, 100, 200)
+    contours, _ = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    masks = []
 
+    # Generates rectanglular 
+    for i in range(len(contours)):
+
+        # Makes a blank mask
+        masks.append(np.zeros(im.shape, dtype='uint8'))
+
+        # Finds the dims of the bounding rect
+        x, y, w, h = cv2.boundingRect(contours[i])
+
+        # Draws the rectangle on the mask
+        cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
+
+get_masks(cv2.imread('Boshi!.jpg'))
