@@ -120,24 +120,26 @@ def get_data(img, masks):
                      get_noisiness(img, mask)))
     return data
 
-img = cv2.imread("Boshi!.jpg")
-#img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
-#img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
-masks = get_masks(img, target_depth = 2)
-x, y, z = np.shape(masks)
-# print (get_noisiness(np.random.randint(255, size=(1000, 1000, 3), dtype="uint8"), None))
-# print (get_noisiness(np.ones((1000, 1000, 3), dtype="uint8"), None))
-for i in range(z):
-    cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
-    print("Image %d" % (i + 1))
-    tmp_hist = get_colors(img, masks[::, ::, i])
-    print("\tColor Range: %d" % tmp_hist)
-    tmp_intensity = get_intensity(img, masks[::,::,i])
-    print("\tIntensity: %d" % tmp_intensity)
-    tmp_saturation = get_saturation(img, masks[::,::,i])
-    print("\tSaturation: %d" % tmp_saturation)
-    tmp_size = get_size(masks[::,::,i])
-    print("\tSize: %d" % tmp_size)
-    print("\tNoisiness: %d" % (get_noisiness(img, masks[::, ::, i])))
-    if cv2.waitKey(1) == 27:
-        break
+
+if __name__ == '__main__':
+    img = cv2.imread("Boshi!.jpg")
+    #img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
+    #img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
+    masks = get_masks(img, target_depth = 2)
+    x, y, z = np.shape(masks)
+    # print (get_noisiness(np.random.randint(255, size=(1000, 1000, 3), dtype="uint8"), None))
+    # print (get_noisiness(np.ones((1000, 1000, 3), dtype="uint8"), None))
+    for i in range(z):
+        cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
+        print("Image %d" % (i + 1))
+        tmp_hist = get_colors(img, masks[::, ::, i])
+        print("\tColor Range: %d" % tmp_hist)
+        tmp_intensity = get_intensity(img, masks[::,::,i])
+        print("\tIntensity: %d" % tmp_intensity)
+        tmp_saturation = get_saturation(img, masks[::,::,i])
+        print("\tSaturation: %d" % tmp_saturation)
+        tmp_size = get_size(masks[::,::,i])
+        print("\tSize: %d" % tmp_size)
+        print("\tNoisiness: %d" % (get_noisiness(img, masks[::, ::, i])))
+        if cv2.waitKey(1) == 27:
+            break
