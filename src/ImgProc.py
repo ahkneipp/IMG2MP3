@@ -104,5 +104,5 @@ def get_masks(img):
 
         # Draws the rectangle on the mask
         cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
-
-get_masks(cv2.imread('Boshi!.jpg'))
+    return np.asarray(masks)
+print(get_masks(cv2.imread('Boshi!.jpg')))
