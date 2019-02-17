@@ -107,6 +107,19 @@ def get_masks(img, target_depth):
         masks[:,:,i] = tmp
     return masks
 
+
+def get_data(img, masks):
+    i_height, i_width, num_contours = np.shape(masks)
+    data = []
+    for i in range(num_contours):
+        mask = masks[:, :, i]
+        data.append((get_size(mask),
+                     get_colors(img, mask),
+                     get_intensity(img, mask),
+                     get_saturation(img, mask),
+                     get_noisiness(img, mask)))
+    return data
+
 img = cv2.imread("Boshi!.jpg")
 #img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
 #img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
