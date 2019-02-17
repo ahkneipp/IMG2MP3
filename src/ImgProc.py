@@ -5,23 +5,23 @@ import numpy as np
 def get_colors(img, mask):
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # hsv_img = np.multiply(hsv_img, np.expand_dims(masks[::, ::, i], axis=2))
-    hsv_img = hsv_img[:,:,0] + 7
+    hsv_img = (hsv_img[:,:,0] + 7) % 180
     hist = cv2.calcHist([hsv_img], channels=[0], mask=mask, histSize=[12], ranges=[0, 179])
-    return hist
+    return np.argmax(hist)
 
 # TODO Get the max value here
 def get_intensity(img, mask):
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # hsv_img = np.multiply(hsv_img, np.expand_dims(masks[::, ::, i], axis=2))
     hist = cv2.calcHist([hsv_img], channels=[2], mask=mask, histSize=[20], ranges=[0, 255])
-    return hist
+    return np.argmax(hist)
 
 
 def get_saturation(img, mask):
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # hsv_img = np.multiply(hsv_img, np.expand_dims(masks[::, ::, i], axis=2))
     hist = cv2.calcHist([hsv_img], channels=[1], mask=mask, histSize=[2], ranges=[0, 255])
-    return hist
+    return np.argmax(hist)
 
 
 def get_size(mask):
@@ -70,20 +70,6 @@ def get_img_maps(img, num_blocks):
     return retval
 
 
-# img = cv2.imread("../index.jpeg")
-img = np.random.randint(255, size=(500, 500, 3), dtype="uint8")
-masks = get_img_maps(img, 50)
-x, y, z = np.shape(masks)
-# print (get_noisiness(np.random.randint(255, size=(1000, 1000, 3), dtype="uint8"), None))
-# print (get_noisiness(np.ones((1000, 1000, 3), dtype="uint8"), None))
-for i in range(z):
-    cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
-    tmp_hist = get_colors(img, masks[::, ::, i])
-    print("Image %d Noisiness: %d" % (i, get_noisiness(img, masks[::, ::, i])))
-    if cv2.waitKey(1) == 27:
-        break
-
-
 def get_masks(img):
     """Finds all contours in an image and returns a list of masks, all of which are filled in rectangular
     bounding boxes of each contour.
@@ -105,4 +91,25 @@ def get_masks(img):
         # Draws the rectangle on the mask
         cv2.rectangle(masks[i], (x, y), (x + w, y + h), color = 1, thickness = cv2.FILLED)
     return np.asarray(masks)
-print(get_masks(cv2.imread('Boshi!.jpg')))
+
+img = cv2.imread("../index.jpeg")
+#img = np.random.randint(0,255,size=(500, 500, 3), dtype="uint8")
+#img[:, :, 2] = np.random.randint(255, size=(500,500), dtype="uint8")
+masks = get_masks(img)
+x, y, z = np.shape(masks)
+# print (get_noisiness(np.random.randint(255, size=(1000, 1000, 3), dtype="uint8"), None))
+# print (get_noisiness(np.ones((1000, 1000, 3), dtype="uint8"), None))
+for i in range(z):
+    cv2.imshow("img", np.multiply(img, np.expand_dims(masks[::, ::, i], axis=2)))
+    print("Image %d" % (i + 1))
+    tmp_hist = get_colors(img, masks[::, ::, i])
+    print("\tColor Range: %d" % tmp_hist)
+    tmp_intensity = get_intensity(img, masks[::,::,1])
+    print("\tIntensity: %d" % tmp_intensity)
+    tmp_saturation = get_saturation(img, masks[::,::,1])
+    print("\tSaturation: %d" % tmp_saturation)
+    tmp_size = get_size(masks[::,::,1])
+    print("\tSize: %d" % tmp_size)
+    print("\tNoisiness: %d" % (get_noisiness(img, masks[::, ::, i])))
+    if cv2.waitKey(1) == 27:
+        break
