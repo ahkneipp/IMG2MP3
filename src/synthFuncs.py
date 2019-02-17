@@ -117,4 +117,4 @@ def play_progression(progression):
     player.open_stream()
     synthesizer = Synthesizer(osc1_waveform=Waveform.sine, osc1_volume=2.0, use_osc2=False)
     for chord in get_progression(0, 2, 0, 0):
-        player.play_wave(synthesizer.generate_chord(chord, 1.0))
+        player.play_wave(synthesizer.generate_chord(chord, .4))

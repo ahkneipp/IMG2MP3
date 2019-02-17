@@ -10,7 +10,7 @@ camera = PiCamera()
 camera.resolution=(320,240)
 time.sleep(0.1)
 
-num_effective_contours = 10
+num_effective_contours = 5
 
 while True:
     keyPress = cv2.waitKey(1)
@@ -41,7 +41,7 @@ while True:
         for d in data:
             synthFuncs.play_progression(synthFuncs.get_progression(d[1],
                 d[3], d[2], d[4]))
-            time.sleep(.2)
+            # time.sleep(.08)
     if keyPress == 27:
         break
 
