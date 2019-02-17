@@ -14,14 +14,10 @@ gsharp = 25.96
 a = 27.5
 asharp = 29.14
 b = 30.87
-notes = ["c", "csharp", "d", "dsharp", "e", "f", "fsharp", "g", "gsharp", "a", "asharp", "b"]
-# notes = [c, csharp, d, dsharp, e, f, fsharp, g, gsharp, a, asharp, b]
+# notes = ["c", "csharp", "d", "dsharp", "e", "f", "fsharp", "g", "gsharp", "a", "asharp", "b"]
+notes = [c, csharp, d, dsharp, e, f, fsharp, g, gsharp, a, asharp, b]
 key_offset = [0, 2, 4, 5, 7, 9, 11]
 minor_key_offset = [0, 2, 3, 5, 7, 8, 10]
-
-player = Player()
-player.open_stream()
-synthesizer = Synthesizer(osc1_waveform=Waveform.sine, osc1_volume=2.0, use_osc2=False)
 
 
 def note_octave(base_note, desired_octave):
@@ -116,25 +112,9 @@ def get_progression(color, saturation, intensity, noise):
     return chord_progression
 
 
-for chord in get_progression(0, 2, 0, 0):
-    # player.play_wave(synthesizer.generate_chord(chord, 1.0))
-    print(chord)
-
-"""
-player.play_wave(synthesizer.generate_constant_wave(note_octave(c, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(d, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(e, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(f, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(g, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(a, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(b, 4), 0.5))
-time.sleep(0.25)
-player.play_wave(synthesizer.generate_constant_wave(note_octave(c, 5), 0.5))
-"""
-
+def play_progression(progression):
+    player = Player()
+    player.open_stream()
+    synthesizer = Synthesizer(osc1_waveform=Waveform.sine, osc1_volume=2.0, use_osc2=False)
+    for chord in get_progression(0, 2, 0, 0):
+        player.play_wave(synthesizer.generate_chord(chord, 1.0))
